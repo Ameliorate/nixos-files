@@ -1,6 +1,3 @@
-# Edit this configuration file to define what should be installed o your system.  Help is available in the 
-# configuration.nix(5) man page and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 let
@@ -67,6 +64,7 @@ in {
       pkgs.mplus-outline-fonts
       pkgs.dina-font
       pkgs.proggyfonts
+      pkgs.source-code-pro
     ];
   };
 
@@ -82,6 +80,10 @@ in {
 
   hardware.pulseaudio.enable = true;
   hardware.pulseaudio.support32Bit = true;
+  hardware.pulseaudio.extraConfig = 
+  ''
+    load-module module-echo-cancel source_name=<alsa_input.pci-0000_00_1b.0.analog-stereo>
+  '';
 
   networking.hostName = if !laptop then "amel-nix-desk-1" else "amel-nix-lap-1";
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -105,6 +107,8 @@ in {
 
   programs.command-not-found.enable = true;
 
+  programs.fish.enable = true;
+
   programs.java.enable = true;
 
   programs.vim.defaultEditor = true;
@@ -118,7 +122,7 @@ in {
     ];
   };
 
-  services.resolved.enable = false;
+  services.resolved.enable = true;
   services.resolved.fallbackDns = [
     "1.1.1.1"
     "1.0.0.1"
@@ -127,6 +131,8 @@ in {
   ];
 
   services.printing.enable = !laptop;
+
+  services.udisks2.enable = true;
 
   services.xserver.enable = true;
   services.xserver.layout = "us";

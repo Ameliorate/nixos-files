@@ -10,7 +10,7 @@
 
   programs.vim = {
     enable = true;
-    plugins = [ "rust-vim" "vim-nix" "syntastic"];
+    plugins = [ "rust-vim" "vim-nix" "syntastic" ];
     settings = {
       number = true;
       background = "dark";
@@ -21,25 +21,24 @@
         syntax on
         set cursorline
         set clipboard=unnamedplus
-        let g:rustfmt_autosave = 1
         let g:syntastic_always_populate_loc_list = 1
         let g:syntastic_auto_loc_list = 1
         let g:syntastic_check_on_open = 1
         let g:syntastic_check_on_wq = 1
       '';
-    };
+  };
 
-    gtk = {
-      enable = true;
-      iconTheme = {
-        name = "Arc";
-        package = pkgs.arc-icon-theme;
-      };
-      theme = {
-        name = "Adwaita";
-        package = pkgs.gnome3.gnome_themes_standard;
-      };
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Arc";
+      package = pkgs.arc-icon-theme;
     };
+    theme = {
+      name = "Adwaita";
+      package = pkgs.gnome3.gnome_themes_standard;
+    };
+  };
 
   home.file."mpd" = if !isLaptop then {
     target = ".config/mpd/mpd.conf";
@@ -61,7 +60,7 @@
         name "Music Player Daemon"
         }
       '';
-    } else {};
+  } else {};
 
   home.file."fish" = {
     target = ".config/fish";

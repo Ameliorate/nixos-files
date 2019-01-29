@@ -1,92 +1,95 @@
 { isLaptop, pkgs, unstable, unstable-small, lpkgs }:
 
 [
+  #pkgs.compton
+  #pkgs.kmenuedit
+  #pkgs.motif
+  #pkgs.mumble
+  #pkgs.nethack
+  #pkgs.obs-studio
+  #pkgs.oneko
+  #pkgs.sc-controller
+  #pkgs.wineFull
   lpkgs.nmfd
   lpkgs.python-with-my-packages
   unstable-small.discord
-  unstable.youtubeDL
-  unstable.runelite
   unstable.chromium
   unstable.qutebrowser
-  #pkgs.mumble
-  pkgs.multimc
-  pkgs.xfce.terminal
-  pkgs.firefox # Eventually see home manager's programs.firefox.enableAdobeFlash, but that might delete bookmarks & settings.
-  pkgs.rustup
-  pkgs.fish
-  pkgs.vlc
-  pkgs.dmenu
-  pkgs.j4-dmenu-desktop
-  pkgs.maim
-  pkgs.xclip
-  pkgs.mpd
-  pkgs.mpc_cli
-  pkgs.pavucontrol
-  #pkgs.steam
-  #pkgs.sc-controller
-  pkgs.polkit_gnome
-  pkgs.xdotool
-  pkgs.gimp
-  pkgs.lxqt.lxqt-policykit
-  pkgs.gvfs
-  pkgs.cryptsetup
-  pkgs.binutils-unwrapped
-  pkgs.xpdf
-  pkgs.wget
-  pkgs.htop
-  pkgs.gcc
-  pkgs.ascii
-  pkgs.feh
-  pkgs.xfce.tumbler
-  pkgs.xfce.thunar
-  pkgs.librsvg
+  unstable.runelite
+  unstable.youtubeDL
   pkgs.arc-icon-theme
-  pkgs.shared_mime_info
+  pkgs.ascii
   pkgs.audacity
-  pkgs.vorbisTools
-  pkgs.pv
+  pkgs.bc
+  pkgs.bind
+  pkgs.binutils-unwrapped
+  pkgs.cdrkit
+  pkgs.cryptsetup
+  pkgs.deluge
+  pkgs.dmenu
+  pkgs.ed
+  pkgs.feh
+  pkgs.ffmpeg-full
+  pkgs.firefox # Eventually see home manager's programs.firefox.enableAdobeFlash, but that might delete bookmarks & settings.
+  pkgs.fish
+  pkgs.gcc
+  pkgs.gimp
+  pkgs.gmpc
+  pkgs.gnome3.dconf
+  pkgs.gnumake
   pkgs.gparted
   pkgs.gst-plugins-bad
   pkgs.gst-plugins-base
   pkgs.gst-plugins-good
   pkgs.gst-plugins-ugly
   pkgs.gstreamer
-  pkgs.bc
-  pkgs.mono
-  pkgs.mirage
-  pkgs.deluge
+  pkgs.gvfs
+  pkgs.htop
+  pkgs.imagemagick
+  pkgs.j
+  pkgs.j4-dmenu-desktop
+  pkgs.jetbrains.idea-community
+  pkgs.jmtpfs
+  pkgs.lastpass-cli
+  pkgs.libelf
+  pkgs.liberation_ttf
+  pkgs.librsvg
+  pkgs.linuxHeaders
+  pkgs.lxqt.lxqt-policykit
+  pkgs.maim
   pkgs.manpages
+  pkgs.maven
+  pkgs.mirage
+  pkgs.mkpasswd
+  pkgs.mono
+  pkgs.mpc_cli
+  pkgs.mpd
+  pkgs.multimc
+  pkgs.nix-prefetch-git
+  pkgs.p7zip
+  pkgs.pavucontrol
+  pkgs.polkit_gnome
+  pkgs.pv
+  pkgs.qt59.full
+  pkgs.rustup
+  pkgs.shared_mime_info
   pkgs.stdmanpages
+  pkgs.steam
+  pkgs.unzip
+  pkgs.vlc
+  pkgs.vorbisTools
+  pkgs.wget
+  pkgs.xclip
+  pkgs.xdotool
+  pkgs.xfce.terminal
+  pkgs.xfce.thunar
+  pkgs.xfce.thunar-volman
+  pkgs.xfce.tumbler
   pkgs.xorg.xev
   pkgs.xorg.xkill
-  pkgs.imagemagick
-  #pkgs.kmenuedit
-  pkgs.cdrkit
-  #pkgs.nethack
-  pkgs.unzip
-  pkgs.zip
-  pkgs.gnumake
-  pkgs.linuxHeaders
-  pkgs.libelf
-  #pkgs.motif
-  pkgs.qt59.full
-  pkgs.j
-  #pkgs.oneko
-  pkgs.liberation_ttf
-  pkgs.ffmpeg-full
-  #pkgs.wineFull
-  #pkgs.compton
-  pkgs.jetbrains.idea-community
-  #pkgs.obs-studio
-  pkgs.maven
-  pkgs.gmpc
-  pkgs.nix-prefetch-git
-  pkgs.gnome3.dconf
-  pkgs.p7zip
-  pkgs.lastpass-cli
-  pkgs.jmtpfs
+  pkgs.xpdf
   pkgs.xzoom
-  pkgs.mkpasswd
+  pkgs.zip
 ] ++ (if isLaptop then [
   pkgs.connman
   pkgs.xorg.xbacklight
