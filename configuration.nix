@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  unstable = import (fetchTarball http://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) { config = { 
+  unstable = import <unstable> { config = { 
     allowUnfree = true; 
 
     chromium = {
@@ -10,7 +10,7 @@ let
     };
   }; };
 
-  unstable-small = import (fetchTarball http://nixos.org/channels/nixos-unstable-small/nixexprs.tar.xz) { config = { allowUnfree = true; }; };
+  unstable-small = import <unstable-small> { config = { allowUnfree = true; }; };
 
   lpkgs = import ./lpkgs.nix pkgs;
 
@@ -19,7 +19,7 @@ in {
   imports = [ 
     ./hardware-configuration.nix
     ./i3.nix
-    "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
+    "${<home-manager>}/nixos"
   ];
 
   home-manager.users.amelorate = import ./home-manager.nix { pkgs = pkgs; isLaptop = laptop; };
@@ -44,11 +44,8 @@ in {
   ];
 
   environment.systemPackages = import ./packages.nix { 
+    inherit pkgs unstable unstable-small lpkgs;
     isLaptop = laptop;
-    pkgs = pkgs;
-    unstable = unstable;
-    unstable-small = unstable-small;
-    lpkgs = lpkgs;
   };
 
   fonts = {
@@ -72,7 +69,7 @@ in {
   fileSystems."/boot".device = pkgs.lib.mkForce "/dev/disk/by-label/BOOT";
   fileSystems."/home".device = pkgs.lib.mkForce "/dev/disk/by-label/home";
 
-  fileSystems."/mnt/hdd".device = if !laptop then "/dev/sdc1" else "";
+  fileSystems."/mnt/hdd".device = if !laptop then "/dev/sdb1" else "";
 
   hardware.cpu.intel.updateMicrocode = true;
 
