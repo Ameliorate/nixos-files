@@ -3,11 +3,6 @@
 let
   unstable = import <unstable> { config = { 
     allowUnfree = true; 
-
-    chromium = {
-#      enablePepperFlash = true;
-      enablePepperPDF = true;
-    };
   }; };
 
   unstable-small = import <unstable-small> { config = { allowUnfree = true; }; };
@@ -48,6 +43,11 @@ in {
     isLaptop = laptop;
   };
 
+
+  environment.variables = {
+  _JAVA_AWT_WM_NONREPARENTING = "1";
+  };
+
   fonts = {
     enableGhostscriptFonts = true;
     fonts = [
@@ -62,6 +62,7 @@ in {
       pkgs.dina-font
       pkgs.proggyfonts
       pkgs.source-code-pro
+      pkgs.undefined-medium
     ];
   };
 
@@ -82,6 +83,8 @@ in {
     load-module module-echo-cancel source_name=<alsa_input.pci-0000_00_1b.0.analog-stereo>
   '';
 
+  hardware.steam-hardware.enable = true;
+
   networking.hostName = if !laptop then "amel-nix-desk-1" else "amel-nix-lap-1";
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -93,11 +96,6 @@ in {
 
   nixpkgs.config = {
     allowUnfree = true;
-    
-    chromium = {
-      #enablePepperFlash = true;
-      enablePepperPDF = true;
-    };
   };
 
   programs.adb.enable = true;
@@ -149,12 +147,93 @@ in {
   services.xserver.dpi = 83;
 
   services.xserver.windowManager.i3 = {
-    enable = true;
+    enable = false; # !!!!!!!!!!
   };
+
+  services.xserver.desktopManager.session = let sxconfig = pkgs.writeText "keybinds" (import ./keybinds.nix { inherit lpkgs pkgs unstable unstable-small; }); in [ { 
+    manage = "desktop";
+    name = "dwm";
+    start = ''
+      systemctl start "sxhkd@$DISPLAY.service" &
+      systemctl start "dwmstatus@$DISPLAY.service" &
+      ${lpkgs.hacksh.server}/bin/hackshserver &
+      ${pkgs.feh}/bin/feh --bg-fill ~/Pictures/bebe.png &
+      ${pkgs.mpd}/bin/mpd &
+      ${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent &
+      ${pkgs.qutebrowser}/bin/qutebrowser &
+      ${unstable-small.discord}/bin/Discord &
+      ${lpkgs.dwm}/bin/dwm &
+      ${lpkgs.falsewm}/bin/falsewm &
+      waitPID=$!
+    '';
+  } ];
+
+  systemd.units."sxhkd@.service" = let
+    sxconfig = pkgs.writeText "keybinds" (import ./keybinds.nix { inherit lpkgs pkgs unstable unstable-small; });
+    script = pkgs.writeShellScriptBin "sxhkd-run" "SHELL=${lpkgs.hacksh.client}/bin/hackshclient ${pkgs.sxhkd}/bin/sxhkd -c ${sxconfig}";
+  in {
+    text = ''
+      [Unit]
+      Description=Simple X Hotkey Daemon
+
+      [Service]
+      Environment=DISPLAY=%i
+      ExecStart=${script}/bin/sxhkd-run
+      User=amelorate
+    '';
+  };
+
+  systemd.units."dwmstatus@.service" = let 
+    dwmstatuscfg = pkgs.writeText "dwm-status-config.json" (builtins.toJSON (import ./dwm-status.nix));
+    script = pkgs.writeShellScriptBin "dwm-status-run" "${pkgs.dwm-status}/bin/dwm-status ${dwmstatuscfg}";
+  in {
+    text = ''
+      [Unit]
+      Description=DWM Status Monitor
+
+      [Service]
+      Environment=DISPLAY=%i
+      ExecStart=${script}/bin/dwm-status-run
+      User=amelorate
+    '';
+  };
+
+  # These commented lines are what I want it to work, but eversmart nixos escapes the @ symbols, of course.
+  #systemd.services."sxhkd@.service" = let 
+  #  sxconfig = pkgs.writeText "keybinds" (import ./keybinds.nix { inherit lpkgs pkgs unstable unstable-small; });
+  #in {
+  #  description = "Simple X Hotkey Daemon";
+  #  script = "${pkgs.sxhkd}/bin/sxhkd -c ${sxconfig}";
+  #  environment.DISPLAY = "%i";
+  #  
+  #  serviceConfig.User = "amelorate";
+  #};
+
+  #systemd.services."dwmstatus@.service" = let 
+  #  dwmstatuscfg = pkgs.writeText "dwm-status-config.json" (builtins.toJSON (import ./dwm-status.nix));
+  #in {
+  #  description = "DWM Status Monitor";
+  #  script = "${pkgs.dwm-status}/bin/dwm-status ${dwmstatuscfg}";
+  #  environment.DISPLAY = "%i";
+  #  
+  #  serviceConfig.User = "amelorate";
+  #};
+
+  security.wrappers.slock.source = "${pkgs.slock.out}/bin/slock";
+
+  security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if (action.id == "org.freedesktop.systemd1.manage-units" && /^(sxhkd)|(dwmstatus)@/.test(action.lookup("unit")) && /\.service$/.test(action.lookup("unit"))) {
+          return "yes";
+        }
+      });
+  '';
 
   sound.enable = true;
 
   time.timeZone = "America/Los_Angeles";
+
+  virtualisation.virtualbox.host.enable = false;
 
   users = {
     extraUsers = {

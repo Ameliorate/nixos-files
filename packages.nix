@@ -1,33 +1,25 @@
 { isLaptop, pkgs, unstable, unstable-small, lpkgs }:
 
 [
-  #pkgs.compton
   #pkgs.kmenuedit
-  #pkgs.motif
   #pkgs.mumble
   #pkgs.nethack
   #pkgs.obs-studio
-  #pkgs.oneko
-  #pkgs.sc-controller
-  #pkgs.wineFull
-  lpkgs.nmfd
   lpkgs.python-with-my-packages
   unstable-small.discord
+  unstable-small.multimc
   unstable.chromium
   unstable.qutebrowser
   unstable.runelite
   unstable.youtubeDL
   pkgs.arc-icon-theme
   pkgs.ascii
-  pkgs.audacity
   pkgs.bc
   pkgs.bind
   pkgs.binutils-unwrapped
-  pkgs.cdrkit
   pkgs.cryptsetup
   pkgs.deluge
   pkgs.dmenu
-  pkgs.ed
   pkgs.feh
   pkgs.ffmpeg-full
   pkgs.firefox # Eventually see home manager's programs.firefox.enableAdobeFlash, but that might delete bookmarks & settings.
@@ -47,7 +39,6 @@
   pkgs.htop
   pkgs.imagemagick
   pkgs.j
-  pkgs.j4-dmenu-desktop
   pkgs.jetbrains.idea-community
   pkgs.jmtpfs
   pkgs.lastpass-cli
@@ -56,15 +47,14 @@
   pkgs.librsvg
   pkgs.linuxHeaders
   pkgs.lxqt.lxqt-policykit
-  pkgs.maim
   pkgs.manpages
   pkgs.maven
-  pkgs.mirage
+  pkgs.mcomix
+  #pkgs.mirage
   pkgs.mkpasswd
   pkgs.mono
   pkgs.mpc_cli
   pkgs.mpd
-  pkgs.multimc
   pkgs.nix-prefetch-git
   pkgs.p7zip
   pkgs.pavucontrol
@@ -75,6 +65,8 @@
   pkgs.shared_mime_info
   pkgs.stdmanpages
   pkgs.steam
+  pkgs.sxhkd
+  pkgs.thunderbird
   pkgs.unzip
   pkgs.vlc
   pkgs.vorbisTools
@@ -92,5 +84,4 @@
   pkgs.zip
 ] ++ (if isLaptop then [
   pkgs.connman
-  pkgs.xorg.xbacklight
 ] else [])

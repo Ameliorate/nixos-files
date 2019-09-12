@@ -21,4 +21,42 @@ pkgs: rec {
         mkdir -p $out/share/man/man1
     '';
   };
+
+  syscmd = pkgs.writeShellScriptBin "syscmd" ''
+    SEL=$(echo -e "Reboot\nlock\nsuspend\nShutdown\nPassword\nreload\nLogout" | ${pkgs.dmenu}/bin/dmenu -p "System: ")
+
+    case "$SEL" in
+    Reboot) ${pkgs.libudev}/bin/systemctl reboot ;;
+    lock) ${pkgs.i3lock}/bin/i3lock -c 000000 -f ;;
+    "suspend") ${pkgs.libudev}/bin/systemctl suspend && ${pkgs.slock}/bin/slock ;;
+    Shutdown) ${pkgs.libudev}/bin/systemctl poweroff ;;
+    Password) ${pkgs.st}/bin/st -t 'LastPass Login' -g 80x20 -c lpasslogin ${pkgs.lastpass-cli}/bin/lpass login ameilorate2@gmail.com ;;
+    "reload") ${pkgs.procps}/bin/pkill dwm && nohup ${dwm}/bin/dwm >/dev/null ;;
+    Logout) ${pkgs.procps}/bin/pkill falsewm ;;
+    esac
+  '';
+
+  dwm = let
+    hideVacantTags = pkgs.fetchurl {
+      url = "https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff";
+      sha256 = "716d43cda73744abbe12c1ecd20fd55769c2a36730a57d0a12c09c06854b7fa8";
+    };
+  in pkgs.dwm.overrideAttrs (oldattrs: {
+    patches = [
+      hideVacantTags
+    ];
+
+    postPatch = ''
+      cp "${./dwm-config.h}" config.def.h
+    '';
+  });
+
+  falsewm = pkgs.writeShellScriptBin "falsewm" ''
+    while true
+    do
+      sleep infinity
+    done
+  '';
+
+  hacksh = import ./hacksh.nix pkgs;
 }

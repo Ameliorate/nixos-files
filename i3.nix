@@ -5,24 +5,11 @@ let
 in {
   home-manager.users.amelorate = {
     xsession.windowManager.i3 = {
-      enable = true;
+      enable = false; # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       extraConfig = 
       ''
         set $mode_system System (l) lock, (e) logout, (n) switch user, (s) suspend, (Shift+r) reboot, (Shift+s) shutdown, (r) reload (Alt+r) restart i3
         set $mod Mod4
-
-        workspace "1" output "HDMI-0"
-        workspace "2" output "DVI-I-1"
-        workspace "3" output "HDMI-0"
-        workspace "4" output "DVI-I-1"
-        workspace "5" output "HDMI-0"
-        workspace "6" output "DVI-I-1"
-        workspace "7" output "HDMI-0"
-        workspace "8" output "DVI-I-1"
-        workspace "9" output "HDMI-0"
-        workspace "10" output "DVI-I-1"
-        workspace "11" output "HDMI-0"
-        workspace "12" output "DVI-I-1"
       '';
       config = {
         bars = [
@@ -197,7 +184,6 @@ in {
           { command = "Discord"; }
           #{ command = "oneko -tofocus -speed 35"; }
           { command = "${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent"; notification = false; }
-          (if !laptop then { command = "mpd"; notification = false; } else null)
         ];
         floating.criteria = [
           { window_role = "pop-up"; }

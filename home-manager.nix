@@ -40,31 +40,30 @@
     };
   };
 
-  home.file."mpd" = if !isLaptop then {
-    target = ".config/mpd/mpd.conf";
-    text =
-      ''
-        db_file            "~/.config/mpd/database"
-        log_file           "~/.config/mpd/log"
-        music_directory    "/mnt/hdd/music"
-        playlist_directory "~/.config/mpd/playlists"
-        pid_file           "~/.config/mpd/pid"
-        state_file         "~/.config/mpd/state"
-        sticker_file       "~/.config/mpd/sticker.sql"
-
-        follow_outside_symlinks	"yes"
-        follow_inside_symlinks  "yes"
-
-        audio_output {
-        type "pulse"
-        name "Music Player Daemon"
-        }
-      '';
-  } else {};
-
   home.file."fish" = {
     target = ".config/fish";
     source = ./fish;
     recursive = true;
+  };
+
+  home.file.mpc = {
+    target = ".config/mpd/mpd.conf";
+    text = ''
+      music_directory    "/mnt/hdd/music"
+      playlist_directory "~/.config/mpd/playlists"
+      db_file            "~/.config/mpd/database"
+      log_file           "~/.config/mpd/log"
+      pid_file           "~/.config/mpd/pid"
+      state_file         "~/.config/mpd/state"
+      sticker_file       "~/.config/mpd/sticker.sql"
+
+      follow_outside_symlinks	"yes"
+      follow_inside_symlinks  "yes"
+
+      audio_output {
+      type "pulse"
+      name "Music Player Daemon"
+      }
+    '';
   };
 }
