@@ -1,13 +1,14 @@
 {
-  order = ["time"];
+  order = ["battery" "time"];
 
   audio = {
   };
 
-  cpu_load = {
-  };
-
   time = {
     format = "%a %b %Y-%m-%d %I:%M %p";
+  };
+
+  battery = {
+    enable_notifier = false;
   };
 }

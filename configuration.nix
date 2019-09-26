@@ -9,25 +9,22 @@ let
 
   lpkgs = import ./lpkgs.nix pkgs;
 
-  laptop = false;
+  laptop = import state/isLaptop.nix;
 in {
   imports = [ 
-    ./hardware-configuration.nix
+    state/hardware-configuration.nix
     ./i3.nix
     "${<home-manager>}/nixos"
   ];
 
   home-manager.users.amelorate = import ./home-manager.nix { pkgs = pkgs; isLaptop = laptop; };
 
-  boot.loader.systemd-boot.enable = true;
-  #boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.enable = !laptop;
 
-#  boot.loader.grub = {
-#    enable = true;
-#    device = "/dev/sda";
-#    efiSupport = true;
-#    splashImage = ./grubwallpaper.png;
-#  };
+  boot.loader.grub = {
+    enable = laptop;
+    device = "/dev/sda";
+  };
 
 #  boot.plymouth = {
 #    enable = true;
@@ -66,11 +63,8 @@ in {
     ];
   };
 
-  fileSystems."/".device =     pkgs.lib.mkForce "/dev/disk/by-label/root";
-  fileSystems."/boot".device = pkgs.lib.mkForce "/dev/disk/by-label/BOOT";
+  fileSystems."/".device = pkgs.lib.mkForce "/dev/disk/by-label/root";
   fileSystems."/home".device = pkgs.lib.mkForce "/dev/disk/by-label/home";
-
-  fileSystems."/mnt/hdd".device = if !laptop then "/dev/sdb1" else "";
 
   hardware.cpu.intel.updateMicrocode = true;
 
@@ -78,15 +72,25 @@ in {
 
   hardware.pulseaudio.enable = true;
   hardware.pulseaudio.support32Bit = true;
-  hardware.pulseaudio.extraConfig = 
-  ''
-    load-module module-echo-cancel source_name=<alsa_input.pci-0000_00_1b.0.analog-stereo>
-  '';
 
   hardware.steam-hardware.enable = true;
 
+  hardware.trackpoint = {
+    enable = laptop;
+    emulateWheel = true;
+  };
+
   networking.hostName = if !laptop then "amel-nix-desk-1" else "amel-nix-lap-1";
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.connman = {
+    enable = laptop;
+  };
+  networking.wireless = {
+    enable = true;
+    # https://github.com/NixOS/nixpkgs/isssues/23196
+    networks = {
+      S4AKR00UNUN21W1NV2Y5MDDW8 = {};
+    };
+  };
 
   nix = {
     buildCores = 0;
@@ -109,7 +113,7 @@ in {
   programs.vim.defaultEditor = true;
 
   services.mysql = {
-    enable = true;
+    enable = false;
     package = pkgs.mariadb;
     bind = "localhost";
     ensureUsers = [
@@ -129,6 +133,8 @@ in {
 
   services.udisks2.enable = true;
 
+  services.upower.enable = true;
+
   services.xserver.enable = true;
   services.xserver.layout = "us";
 
@@ -138,11 +144,6 @@ in {
     enable = true;
     theme = "breeze";
   };
-
-  services.xserver.xrandrHeads = if !laptop then [
-    { output = "HDMI-0"; primary = true; }
-    "DVI-I-1"
-  ] else [];
 
   services.xserver.dpi = 83;
 
@@ -158,7 +159,7 @@ in {
       systemctl start "dwmstatus@$DISPLAY.service" &
       ${lpkgs.hacksh.server}/bin/hackshserver &
       ${pkgs.feh}/bin/feh --bg-fill ~/Pictures/bebe.png &
-      ${pkgs.mpd}/bin/mpd &
+      ${ if !laptop then "${pkgs.mpd}/bin/mpd &" else "" }
       ${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent &
       ${pkgs.qutebrowser}/bin/qutebrowser &
       ${unstable-small.discord}/bin/Discord &
@@ -185,7 +186,7 @@ in {
 
   systemd.units."dwmstatus@.service" = let 
     dwmstatuscfg = pkgs.writeText "dwm-status-config.json" (builtins.toJSON (import ./dwm-status.nix));
-    script = pkgs.writeShellScriptBin "dwm-status-run" "${pkgs.dwm-status}/bin/dwm-status ${dwmstatuscfg}";
+    script = pkgs.writeShellScriptBin "dwm-status-run" "${unstable.dwm-status}/bin/dwm-status ${dwmstatuscfg}";
   in {
     text = ''
       [Unit]
@@ -231,7 +232,7 @@ in {
 
   sound.enable = true;
 
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "America/New_York";
 
   virtualisation.virtualbox.host.enable = false;
 
@@ -247,9 +248,5 @@ in {
     };
   };
 
-  # This value determines the NixOS release with which your system is to be
-  # compatible, in order to avoid breaking some software such as database
-  # servers. You should change this only after NixOS release notes say you
-  # should.
-  system.stateVersion = "18.03"; # Did you read the comment?
+  system.stateVersion = import state/version.nix; # Did you read the comment?
 }

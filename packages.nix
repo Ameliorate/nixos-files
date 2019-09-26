@@ -43,15 +43,12 @@
   pkgs.jmtpfs
   pkgs.lastpass-cli
   pkgs.libelf
-  pkgs.liberation_ttf
   pkgs.librsvg
   pkgs.linuxHeaders
   pkgs.lxqt.lxqt-policykit
   pkgs.manpages
   pkgs.maven
   pkgs.mcomix
-  #pkgs.mirage
-  pkgs.mkpasswd
   pkgs.mono
   pkgs.mpc_cli
   pkgs.mpd
@@ -67,6 +64,7 @@
   pkgs.steam
   pkgs.sxhkd
   pkgs.thunderbird
+  pkgs.trayer
   pkgs.unzip
   pkgs.vlc
   pkgs.vorbisTools
