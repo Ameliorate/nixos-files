@@ -66,4 +66,8 @@
       }
     '';
   };
+
+  services.dunst = {
+    enable = true;
+  };
 }

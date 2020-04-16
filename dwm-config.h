@@ -34,6 +34,7 @@ static const Rule rules[] = {
 	{ NULL,       "pop-up",   NULL,       0,            1,           -1 },
 	{ NULL,       "task_dialog",NULL,     0,            1,           -1 },
 	{ "calculator", NULL,     NULL,       0,            1,           -1 },
+	{ NULL       ,NULL,       "Steam Keyboard",0,       1,           -1 },
 };
 
 /* layout(s) */
@@ -95,7 +96,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      7)
 	TAGKEYS(                        XK_8,                      8)
 	TAGKEYS(                        XK_9,                      9)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
 /* button definitions */
@@ -105,7 +105,7 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD("pkill trayer || trayer") },
+	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD("pkill trayer || trayer --transparent true --alpha 0 --tint 0x444444") },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },

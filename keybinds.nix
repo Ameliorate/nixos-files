@@ -8,6 +8,10 @@
     ${lpkgs.syscmd}/bin/syscmd
   Print
     ${pkgs.maim}/bin/maim -s | tee ~/Pictures/Screenshots/$(date -u +"%F_%T").png | ${pkgs.xclip}/bin/xclip -selection clipboard -t image/png
+  super+v
+    ~/Git/distopia/result/bin/distopia clipboard
+  super+button2
+    ~/Git/distopia/result/bin/distopia primary
 
   # laptop
   XF86MonBrightness{Up,Down}

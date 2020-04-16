@@ -1,7 +1,9 @@
 { isLaptop, pkgs, unstable, unstable-small, lpkgs }:
 
 [
-  #pkgs.kmenuedit
+  lpkgs.dmenumount
+  lpkgs.dmenuumount
+  pkgs.kmenuedit
   #pkgs.mumble
   #pkgs.nethack
   #pkgs.obs-studio
@@ -9,11 +11,14 @@
   unstable-small.discord
   unstable-small.multimc
   unstable.chromium
+  unstable.jetbrains.idea-community
   unstable.qutebrowser
   unstable.runelite
+  unstable.steam
   unstable.youtubeDL
   pkgs.arc-icon-theme
   pkgs.ascii
+  pkgs.bazel
   pkgs.bc
   pkgs.bind
   pkgs.binutils-unwrapped
@@ -39,16 +44,17 @@
   pkgs.htop
   pkgs.imagemagick
   pkgs.j
-  pkgs.jetbrains.idea-community
   pkgs.jmtpfs
   pkgs.lastpass-cli
   pkgs.libelf
+  pkgs.libreoffice
   pkgs.librsvg
   pkgs.linuxHeaders
   pkgs.lxqt.lxqt-policykit
   pkgs.manpages
   pkgs.maven
   pkgs.mcomix
+  pkgs.minecraft
   pkgs.mono
   pkgs.mpc_cli
   pkgs.mpd
@@ -61,9 +67,10 @@
   pkgs.rustup
   pkgs.shared_mime_info
   pkgs.stdmanpages
-  pkgs.steam
   pkgs.sxhkd
+  pkgs.thefuck
   pkgs.thunderbird
+  pkgs.tor-browser-bundle-bin
   pkgs.trayer
   pkgs.unzip
   pkgs.vlc

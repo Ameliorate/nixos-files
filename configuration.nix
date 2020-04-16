@@ -60,6 +60,7 @@ in {
       pkgs.proggyfonts
       pkgs.source-code-pro
       pkgs.undefined-medium
+      pkgs.unifont
     ];
   };
 
@@ -100,6 +101,7 @@ in {
 
   nixpkgs.config = {
     allowUnfree = true;
+    oraclejdk.accept_license = true;
   };
 
   programs.adb.enable = true;
@@ -109,6 +111,7 @@ in {
   programs.fish.enable = true;
 
   programs.java.enable = true;
+  #programs.java.package = pkgs.oraclejre8;
 
   programs.vim.defaultEditor = true;
 
@@ -123,13 +126,19 @@ in {
 
   services.resolved.enable = true;
   services.resolved.fallbackDns = [
-    "1.1.1.1"
-    "1.0.0.1"
-    "2606:4700:4700::1111"
-    "2606:4700:4700::1001"
+    "8.8.8.8"
+    "8.8.4.4"
   ];
 
   services.printing.enable = !laptop;
+
+  services.thinkfan = {
+    enable = true;
+    sensors = ''
+      hwmon /sys/class/hwmon/hwmon2/temp1_input (0,0,10)
+
+    '';
+  };
 
   services.udisks2.enable = true;
 
@@ -181,6 +190,7 @@ in {
       Environment=DISPLAY=%i
       ExecStart=${script}/bin/sxhkd-run
       User=amelorate
+      Restart=on-failure
     '';
   };
 
@@ -196,6 +206,7 @@ in {
       Environment=DISPLAY=%i
       ExecStart=${script}/bin/dwm-status-run
       User=amelorate
+      Restart=on-failure
     '';
   };
 
@@ -219,6 +230,13 @@ in {
   #  
   #  serviceConfig.User = "amelorate";
   #};
+
+  systemd.services."fixresettingchiphang" = {
+    description = "Fix 'Resetting chip for hang on...` error when overheating where sometimes the gpu doesn't render 3d afterwards";
+    script = "${pkgs.libudev}/bin/journalctl --follow --output=json --identifier=kernel --grep='Resetting chip for hang on' --since=now | ${pkgs.findutils}/bin/xargs --max-args=1 --replace=NULL ${pkgs.bash}/bin/sh -c '${pkgs.kbd}/bin/chvt 8 && ${pkgs.kbd}/bin/chvt 7'";
+    serviceConfig.User = "root";
+    wantedBy = [ "multi-user.target" ];
+  };
 
   security.wrappers.slock.source = "${pkgs.slock.out}/bin/slock";
 

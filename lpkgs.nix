@@ -23,12 +23,12 @@ pkgs: rec {
   };
 
   syscmd = pkgs.writeShellScriptBin "syscmd" ''
-    SEL=$(echo -e "Reboot\nlock\nsuspend\nShutdown\nPassword\nreload\nLogout" | ${pkgs.dmenu}/bin/dmenu -p "System: ")
+    SEL=$(echo -e "lock\nReboot\nsuspend\nShutdown\nPassword\nreload\nLogout" | ${pkgs.dmenu}/bin/dmenu -p "System: ")
 
     case "$SEL" in
     Reboot) ${pkgs.libudev}/bin/systemctl reboot ;;
     lock) ${pkgs.i3lock}/bin/i3lock -c 000000 -f ;;
-    "suspend") ${pkgs.libudev}/bin/systemctl suspend && ${pkgs.slock}/bin/slock ;;
+    "suspend") ${pkgs.libudev}/bin/systemctl suspend && ${pkgs.i3lock}/bin/i3lock -c 000000 -f ;;
     Shutdown) ${pkgs.libudev}/bin/systemctl poweroff ;;
     Password) ${pkgs.st}/bin/st -t 'LastPass Login' -g 80x20 -c lpasslogin ${pkgs.lastpass-cli}/bin/lpass login ameilorate2@gmail.com ;;
     "reload") ${pkgs.procps}/bin/pkill dwm && nohup ${dwm}/bin/dwm >/dev/null ;;
@@ -59,4 +59,7 @@ pkgs: rec {
   '';
 
   hacksh = import ./hacksh.nix pkgs;
+
+  dmenumount = (import ./dmenumount.nix pkgs).dmenumount;
+  dmenuumount = (import ./dmenumount.nix pkgs).dmenuumount;
 }
